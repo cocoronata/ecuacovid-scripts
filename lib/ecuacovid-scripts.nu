@@ -8,3 +8,11 @@ def data [block] {
     exit
   }
 }
+
+def parse-date [] {
+  parse {day}/{month}/{year}
+}
+
+source lib/ecuacovid-scripts/positives.nu
+source lib/ecuacovid-scripts/vaccines.nu
+source lib/ecuacovid-scripts/reporting.nu

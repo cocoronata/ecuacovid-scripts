@@ -1,4 +1,3 @@
-source lib.nu
-source reporting/vaccines.nu
+source lib/ecuacovid-scripts.nu
 
-by-manufacturer-since-january
+ecuacovid report-overall
