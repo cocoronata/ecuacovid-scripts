@@ -15,6 +15,31 @@ playground "Vaccines" {
 playground "Positive Cases" {
   source tests/criterios.nu 
 
+  play "lib" {
+    play "checks the region" {
+      let data = $(given {
+        echo Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua |
+        wrap provincia
+      });
+
+      let actual = $(echo $data | region | uniq);
+      
+      expect $(echo $actual | length) --to-eq 1
+      expect $(echo $actual | nth 0) --to-eq "sierra"
+    }
+    
+    play "groups by region" {
+      let data = $(given {
+        echo Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua |
+        wrap provincia
+      });
+
+      let actual = $(echo $data | by-region | get sierra | length);
+
+      expect $actual --to-eq $(echo $data | length)
+     }
+  }
+
   play "API" {
     play "data for latest (present) day" {
       let data = $(given {

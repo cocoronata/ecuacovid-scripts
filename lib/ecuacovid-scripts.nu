@@ -14,8 +14,22 @@ def parse-date [] {
 }
 
 def by-region [] {
-  where provincia in [Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua] |
-  wrap sierra
+  group-by { region }
+}
+
+def region [] {
+  each {
+    if $it.provincia in [Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua] {
+      = "sierra"
+    } { = "other" }
+  }
+}
+
+def provinces [] {
+  data {
+    open datos_crudos/muertes/por_fecha/provincias_por_mes.json |
+    select provincia
+  }
 }
 
 source lib/ecuacovid-scripts/positives.nu
