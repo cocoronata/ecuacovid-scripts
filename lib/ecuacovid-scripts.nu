@@ -13,6 +13,11 @@ def parse-date [] {
   parse {day}/{month}/{year}
 }
 
+def by-region [] {
+  where provincia in [Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua] |
+  wrap sierra
+}
+
 source lib/ecuacovid-scripts/positives.nu
 source lib/ecuacovid-scripts/vaccines.nu
 source lib/ecuacovid-scripts/reporting.nu
