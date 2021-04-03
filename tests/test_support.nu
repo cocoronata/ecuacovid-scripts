@@ -51,7 +51,7 @@ def expect [
   let t_left = $(echo $left_headers | length);
   let t_right = $(echo $right_headers | length);
 
-  let are_equal = $(if $(echo $are_headers_equal | where $it == $false | length) == 0 && $rows_check == $(= ($t_left + $t_right) / 2) && $(echo $actual | length) == $(echo $to-eq | length) { = $true } { = $false });
+  let are_equal = $(if $(echo $are_headers_equal | where $it == $false | length) == 0 && $rows_check == $(echo $actual | get $(echo $actual | get) | length) && $(echo $actual | get $(echo $actual | get) | length) == $(echo $to-eq | get $(echo $to-eq | get) | length) { = $true } { = $false });
 
   let out = $(if $true == $are_equal { = `{{$(ansi green)}}ok{{$(ansi reset)}} {{$(char newline)}}` } { = `{{$(ansi red)}}failed{{$(ansi reset)}} {{$(char newline)}}` });
 

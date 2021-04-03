@@ -17,11 +17,26 @@ def by-region [] {
   group-by { region }
 }
 
+def costa [] {echo ["El Oro" Esmeraldas Guayas "Los Ríos" Manabí "Santa Elena" "Sto. Domingo Tsáchilas"]}
+def sierra [] {echo [Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua]}
+def amazonia [] {echo ["Morona Santiago" Napo Orellana Pastaza Sucumbíos "Zamora Chinchipe"]}
+def region-insular [] {echo [Galápagos]}
+
 def region [] {
   each {
     if $it.provincia in [Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua] {
       = "sierra"
-    } { = "other" }
+    } {
+      if $it.provincia in ["El Oro" Esmeraldas Guayas "Los Ríos" Manabí "Santa Elena" "Sto. Domingo Tsáchilas"] {
+        = "costa"
+      } {
+        if $it.provincia in ["Morona Santiago" Napo Orellana Pastaza Sucumbíos "Zamora Chinchipe"] {
+          = "amazonia"
+        } {
+          = "region_insular"
+        }
+      }
+    }
   }
 }
 

@@ -3,27 +3,64 @@ playground "Positive Cases" {
 
   play "lib" {
     play "checks the region" {
-      let data = $(given {
-        echo Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua |
-        wrap provincia
-      });
+      play "región insular" {
+        let data = $(given {
+          region-insular |
+          wrap provincia
+        });
 
-      let actual = $(echo $data | region | uniq);
+        let actual = $(echo $data | region | uniq);
       
-      expect $(echo $actual | length) --to-eq 1
-      expect $(echo $actual | nth 0) --to-eq "sierra"
+        expect $(echo $actual | length) --to-eq 1
+        expect $(echo $actual | nth 0) --to-eq "region_insular"
+      }
+
+      play "sierra" {
+        let data = $(given {
+          sierra |
+          wrap provincia
+        });
+
+        let actual = $(echo $data | region | uniq);
+      
+        expect $(echo $actual | length) --to-eq 1
+        expect $(echo $actual | nth 0) --to-eq "sierra"
+      }
+
+      play "amazonia" {
+        let data = $(given {
+          amazonia | wrap provincia
+        });
+
+        let actual = $(echo $data | region | uniq);
+      
+        expect $(echo $actual | length) --to-eq 1
+        expect $(echo $actual | nth 0) --to-eq "amazonia"
+      }
+
+      play "costa" {
+        let data = $(given {
+          costa | wrap provincia
+        });
+
+        let actual = $(echo $data | region | uniq);
+      
+        expect $(echo $actual | length) --to-eq 1
+        expect $(echo $actual | nth 0) --to-eq "costa"
+      }
     }
     
     play "groups by region" {
       let data = $(given {
-        echo Azuay Bolívar Cañar Carchi Cotopaxi Chimborazo Imbabura Loja Pichincha Tungurahua |
+        echo $(costa) $(sierra) $(amazonia) $(region-insular) |
         wrap provincia
       });
 
-      let actual = $(echo $data | by-region | get sierra | length);
+      let actual = $(echo $data | by-region | get);
 
-      expect $actual --to-eq $(echo $data | length)
+      expect $actual --to-eq $(echo "costa" "sierra" "amazonia" "region_insular")
      }
+
   }
 
   play "National total cases checks" {
