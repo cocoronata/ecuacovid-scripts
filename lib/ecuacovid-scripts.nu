@@ -1,10 +1,10 @@
 def data [block] {
-  let is_present = $(pwd | path join "datos_crudos" | path exists);
+  let is_present = (pwd | path join -a datos_crudos | path exists);
 
   if $is_present {
-    $block
+    do $block
   } {
-    echo "No raw data available." $(char newline) | str collect
+    echo "No raw data available." (char newline) | str collect
     exit
   }
 }
@@ -42,7 +42,7 @@ def region [] {
 
 def provinces [] {
   data {
-    open datos_crudos/muertes/por_fecha/provincias_por_mes.json |
+    open datos_crudos/muertes/por_fecha/provincias_por_mes.csv |
     select provincia
   }
 }

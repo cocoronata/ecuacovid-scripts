@@ -1,8 +1,8 @@
 def playground [topic, block] {
   with-env [N 5 REJECT slow] {
-    echo $topic " tests" $(char newline) | str collect
+    echo $topic " tests" (char newline) | str collect
 
-    $block
+    do $block
   }
 }
 
@@ -11,22 +11,22 @@ def play [
   --tag: string
   block: block
 ] {
-  let title = $(echo $topic);
+  let title = ($topic);
 
-  let tag_empty = $(= $tag | empty?);
-  let run_all = $(= $nu.env | get | where $it == RUN_ALL | length);
+  let tag_empty = ($tag | empty?);
+  let run_all = ($nu.env | get | where $it == RUN_ALL | length);
 
   if $tag_empty == $true {
-    $block
+    do $block
   } {
     if $tag == $nu.env.REJECT && $run_all == 0 {
-      echo `  {{$topic}} ... {{$(ansi yellow)}}skipped{{$(ansi reset)}}` $(char newline) | str collect
-    } { $block }
+      $"  ($topic) ... (ansi yellow)skipped(ansi reset) (char newline)"
+    } { do $block }
   }
 }
 
 def given [block] {
-  $block
+  do $block
 }
 
 def pending [block] { }
@@ -35,29 +35,29 @@ def expect [
   actual: any
   --to-eq: any
 ] {
-  let left_headers = $(echo $actual | get);
-  let right_headers = $(echo $to-eq | get);
+  let left_headers = ($actual | get);
+  let right_headers = ($to-eq | get);
 
-  let are_headers_equal = $(echo $left_headers $right_headers | uniq | each --numbered {
-    if $it.item == $(echo $left_headers | nth $it.index) { = $true } { = $false }
+  let are_headers_equal = (echo $left_headers $right_headers | uniq | each --numbered {
+    if $it.item == ($left_headers | nth $it.index) { $true } { $false }
   });
 
-  let rows_check = $(echo $(echo $actual | each { 
-    get $(= $left_headers)
-  }) $(echo $to-eq | each {
-    get $(= $right_headers)
-  }) | uniq | length);
+  let rows_check = (echo ($actual | each { get $left_headers }) ($to-eq | each { get $right_headers} ) | uniq | length);
 
-  let t_left = $(echo $left_headers | length);
-  let t_right = $(echo $right_headers | length);
+  let t_left = ($left_headers | length);
+  let t_right = ($right_headers | length);
 
-  let are_equal = $(if $(echo $are_headers_equal | where $it == $false | length) == 0 && $rows_check == $(echo $actual | get $(echo $actual | get) | length) && $(echo $actual | get $(echo $actual | get) | length) == $(echo $to-eq | get $(echo $to-eq | get) | length) { = $true } { = $false });
+  let first = (if ($are_headers_equal | where $it == $false | length) == 0 { $true } { $false });
+  let second = (if $rows_check == ($actual | get ($actual | get) | length) { $true } { $false });
+  let third = (if ($actual | get ($actual | get) | length) == ($to-eq | get ($to-eq | get) | length) { $true } { $false });
 
-  let out = $(if $true == $are_equal { = `{{$(ansi green)}}ok{{$(ansi reset)}} {{$(char newline)}}` } { = `{{$(ansi red)}}failed{{$(ansi reset)}} {{$(char newline)}}` });
+  let are_equal = ($first && $second && $third);
+  
+  let out = (if $true == $are_equal { $"(ansi green)ok(ansi reset) (char newline)" } { $"(ansi red)failed(ansi reset) (char newline)" });
 
-  = `  {{$title}} ... {{$out}}`
+  $"  ($title) ... ($out)"
 }
 
 def items [] {
-  echo $nu.env.N | str to-int
+  $nu.env.N | str to-int
 }

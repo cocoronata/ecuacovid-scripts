@@ -1,20 +1,10 @@
 def total-vaccines-by-manufacturer [] {
   data {
     manufacturers |
-    update vaccine {
-      let words = $(get vaccine | split row "/");
-
-      if $(echo $words | first) == "Oxford" {
-        echo $words | str collect "/"
-      } {
-        echo $words | first
-      }
-    } |
+    update vaccine { get vaccine | split row "/" | first } |
     group-by vaccine |
     pivot vaccine records |
-    update records {
-      get records.total | math sum
-    } |
+    update records { get records.total | math sum } |
     rename vaccine total
   }
 }
