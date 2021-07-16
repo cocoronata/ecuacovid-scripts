@@ -47,6 +47,8 @@ def provinces [] {
   }
 }
 
+source lib/ecuacovid-scripts/support.nu
 source lib/ecuacovid-scripts/positives.nu
 source lib/ecuacovid-scripts/vaccines.nu
 source lib/ecuacovid-scripts/reporting.nu
+source lib/ecuacovid-scripts/charts.nu
