@@ -1,10 +1,10 @@
-def _hide-ad [] {
+def hide-ad [] {
   ls *.png | where name =~ chart | each {
-    $"convert ($it.name) cover.png -gravity northeast -composite ($it.name)"
+    $"convert ($it.name) ../assets/misc/cover.png -gravity northeast -composite ($it.name)"
   } | str collect (char newline)
 }
 
-def _copy-flags [] {
+def copy-flags [] {
   each --numbered {
     let path = ("../assets/flags/" | path join -a $it.item.img);
 
@@ -47,9 +47,9 @@ def make-point [position, origin , padding] {
 }
 
 def draw-flags [origin, padding] {
-  each --numbered {
-    let flag_name = $it.item.name;
-    let position = (make-point $it.index $origin $padding);
+  for i in 0..<($in | length) {
+    let flag_name = $"flag_for_(as-two-digit-string $i).png";
+    let position = (make-point $i $origin $padding);
 
     $"($flag_name) -gravity northwest -geometry ($position) -composite"
   }
@@ -60,7 +60,7 @@ def draw-names [origin, padding] {
     let province_name = $it.item.province;
     let position = (make-point $it.index $origin $padding);
 
-    $"-gravity northwest -font 'Lato-Regular.ttf' -pointsize 22 -annotate ($position) '($province_name)'"
+    $"-gravity northwest -font '../assets/fonts/Lato-Regular.ttf' -pointsize 22 -annotate ($position) '($province_name)'"
   }  
 }
 
@@ -69,7 +69,7 @@ def draw-averages [origin, padding] {
     let content = $"($it.item.average_per_day) casos diarios ('(')promedio(')')";
     let position = (make-point $it.index $origin $padding);
     
-    $"-gravity northwest -font 'Lato-Regular.ttf' -gravity northwest -pointsize 16 -annotate ($position) '($content)'"
+    $"-gravity northwest -font '../assets/fonts/Lato-Regular.ttf' -gravity northwest -pointsize 16 -annotate ($position) '($content)'"
   }
 }
 
@@ -78,7 +78,7 @@ def draw-total-cases [origin, padding] {
     let content = $"($it.item.total) casos"
     let position = (make-point $it.index $origin $padding);
 
-    $"-gravity northwest -font 'Lato-Regular.ttf' -gravity northwest -pointsize 16 -annotate ($position) '($content)'"
+    $"-gravity northwest -font '../assets/fonts/Lato-Regular.ttf' -gravity northwest -pointsize 16 -annotate ($position) '($content)'"
   }
 }
 
@@ -107,11 +107,11 @@ def draw [provinces] {
     [  x,   y];
     [600, 100]
   ];
-
+  
   let metadata = (open metadata.json);
 
   let names = ($provinces | draw-names $origin $province_name_padding);
-  let flags = (ls flag_for* | draw-flags $origin $flag_padding);
+  let flags = ($provinces | draw-flags $origin $flag_padding);
   let daily_averages = ($metadata | draw-averages $origin $averages_padding);
   let total_cases = ($metadata | draw-total-cases $origin $total_cases_padding);
 

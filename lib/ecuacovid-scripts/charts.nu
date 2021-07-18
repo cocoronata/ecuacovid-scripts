@@ -1,1 +1,1 @@
-source lib/ecuacovid-scripts/charts/daily_positive_cases.nu
+source lib/ecuacovid-scripts/charts/positive_cases.nu
